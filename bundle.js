@@ -168,15 +168,16 @@ var YoutubeApp = /*#__PURE__*/function () {
                 element: _this.videoList,
                 position: "beforeend",
                 template: _templates__WEBPACK_IMPORTED_MODULE_5__["default"].skeleton()
-              });
-              responseData = {
-                items: (0,_mockObject__WEBPACK_IMPORTED_MODULE_6__["default"])()
-              }; // const responseData = await getSearchResult(
-              //   this.keyword,
-              //   this.nextPageToken
-              // );
-              // this.nextPageToken = responseData.nextPageToken;
+              }); // const responseData = {
+              //   items: mockObject(),
+              // };
 
+              _context.next = 5;
+              return (0,_api_getSearchResult__WEBPACK_IMPORTED_MODULE_7__["default"])(_this.keyword, _this.nextPageToken);
+
+            case 5:
+              responseData = _context.sent;
+              _this.nextPageToken = responseData.nextPageToken;
               videoItemTemplate = _templates__WEBPACK_IMPORTED_MODULE_5__["default"].videoItems(responseData.items, _this.userStorage);
               (0,_utils_dom__WEBPACK_IMPORTED_MODULE_11__.removeChildElements)(_this.videoList, document.querySelectorAll(".skeleton"));
               (0,_utils_dom__WEBPACK_IMPORTED_MODULE_11__.render)({
@@ -185,7 +186,7 @@ var YoutubeApp = /*#__PURE__*/function () {
                 template: videoItemTemplate
               });
 
-            case 7:
+            case 10:
             case "end":
               return _context.stop();
           }
@@ -218,15 +219,19 @@ var YoutubeApp = /*#__PURE__*/function () {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                // this.keyword = keyword;
-                // const responseData = await getSearchResult(this.keyword);
-                // this.nextPageToken = responseData.nextPageToken;
-                responseData = {
-                  items: (0,_mockObject__WEBPACK_IMPORTED_MODULE_6__["default"])()
-                }; // 검색 결과가 없을 경우
+                this.keyword = keyword;
+                _context2.next = 3;
+                return (0,_api_getSearchResult__WEBPACK_IMPORTED_MODULE_7__["default"])(this.keyword);
+
+              case 3:
+                responseData = _context2.sent;
+                this.nextPageToken = responseData.nextPageToken; // const responseData = {
+                //   items: mockObject(),
+                // };
+                // 검색 결과가 없을 경우
 
                 if (!(responseData.items.length === 0)) {
-                  _context2.next = 7;
+                  _context2.next = 11;
                   break;
                 }
 
@@ -240,7 +245,7 @@ var YoutubeApp = /*#__PURE__*/function () {
                 (0,_utils_dom__WEBPACK_IMPORTED_MODULE_11__.insertImageSrc)(document.querySelector(".no-result__image"), _assets_images_not_found_png__WEBPACK_IMPORTED_MODULE_8__);
                 return _context2.abrupt("return");
 
-              case 7:
+              case 11:
                 (0,_utils_dom__WEBPACK_IMPORTED_MODULE_11__.removeChildElements)(this.videoList, document.querySelectorAll(".skeleton"));
                 videoItemTemplate = _templates__WEBPACK_IMPORTED_MODULE_5__["default"].videoItems(responseData.items, this.userStorage);
                 (0,_utils_dom__WEBPACK_IMPORTED_MODULE_11__.render)({
@@ -249,7 +254,7 @@ var YoutubeApp = /*#__PURE__*/function () {
                   template: videoItemTemplate
                 });
 
-              case 10:
+              case 14:
               case "end":
                 return _context2.stop();
             }
