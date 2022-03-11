@@ -48,7 +48,7 @@ var UserStorage = /*#__PURE__*/function () {
     key: "addStorage",
     value: function addStorage(data) {
       if (this.storage.length >= _constants_constants__WEBPACK_IMPORTED_MODULE_3__.STORAGE_MAX_COUNT) {
-        throw new Error(_constants_constants__WEBPACK_IMPORTED_MODULE_3__.ERROR_MESSAGE_USER_STORAGE_OVERFLOW);
+        throw new Error(_constants_constants__WEBPACK_IMPORTED_MODULE_3__.ERROR_MESSAGE.USER_STORAGE_OVERFLOW);
       }
 
       this.storage = [].concat((0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__["default"])(this.storage), [data]);
@@ -117,6 +117,9 @@ var YoutubeApp = /*#__PURE__*/function () {
     (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, YoutubeApp);
 
     (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_3__["default"])(this, "onClickDimmer", function () {
+      (0,_utils_dom__WEBPACK_IMPORTED_MODULE_11__.inputClear)(_this.searchInputKeyword);
+      (0,_utils_dom__WEBPACK_IMPORTED_MODULE_11__.scrollToTop)(_this.videoList);
+      (0,_utils_dom__WEBPACK_IMPORTED_MODULE_11__.removeAllChildElements)(_this.videoList);
       (0,_utils_dom__WEBPACK_IMPORTED_MODULE_11__.addClassList)(_this.modalContainer, "hide");
     });
 
@@ -127,7 +130,12 @@ var YoutubeApp = /*#__PURE__*/function () {
       var _findTargetDataset = (0,_utils_dom__WEBPACK_IMPORTED_MODULE_11__.findTargetDataset)(target, ".video-item"),
           videoId = _findTargetDataset.videoId;
 
-      _this.userStorage.addStorage(videoId);
+      try {
+        _this.userStorage.addStorage(videoId);
+      } catch (_ref2) {
+        var message = _ref2.message;
+        (0,_utils_dom__WEBPACK_IMPORTED_MODULE_11__.alertMessage)(message);
+      }
 
       (0,_utils_dom__WEBPACK_IMPORTED_MODULE_11__.addClassList)(target, "hide");
     });
@@ -139,6 +147,14 @@ var YoutubeApp = /*#__PURE__*/function () {
 
     (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_3__["default"])(this, "onSubmitSearchButton", function (e) {
       e.preventDefault();
+
+      try {
+        (0,_utils_dom__WEBPACK_IMPORTED_MODULE_11__.validateInput)(_this.searchInputKeyword.value);
+      } catch (_ref3) {
+        var message = _ref3.message;
+        (0,_utils_dom__WEBPACK_IMPORTED_MODULE_11__.alertMessage)(message);
+      }
+
       (0,_utils_dom__WEBPACK_IMPORTED_MODULE_11__.scrollToTop)(_this.videoList);
       (0,_utils_dom__WEBPACK_IMPORTED_MODULE_11__.removeAllChildElements)(_this.videoList);
       (0,_utils_dom__WEBPACK_IMPORTED_MODULE_11__.render)({
@@ -146,8 +162,9 @@ var YoutubeApp = /*#__PURE__*/function () {
         position: "beforeend",
         template: _templates__WEBPACK_IMPORTED_MODULE_5__["default"].skeleton()
       });
+      _this.searchInputKeyword = document.querySelector("#search-input-keyword");
 
-      _this.search(document.querySelector("#search-input-keyword").value);
+      _this.search(_this.searchInputKeyword.value);
     });
 
     (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_3__["default"])(this, "onScrollVideoList", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default().mark(function _callee() {
@@ -168,7 +185,11 @@ var YoutubeApp = /*#__PURE__*/function () {
                 element: _this.videoList,
                 position: "beforeend",
                 template: _templates__WEBPACK_IMPORTED_MODULE_5__["default"].skeleton()
-              }); // const responseData = {
+              });
+              /**
+               * 목 데이터로 검색 결과 대체
+               */
+              // const responseData = {
               //   items: mockObject(),
               // };
 
@@ -195,6 +216,7 @@ var YoutubeApp = /*#__PURE__*/function () {
     })));
 
     this.modalContainer = document.querySelector(".modal-container");
+    this.searchInputKeyword = document.querySelector("#search-input-keyword");
     this.searchResult = document.querySelector(".search-result");
     this.videoList = document.querySelector(".video-list");
     this.bindEvents();
@@ -225,7 +247,11 @@ var YoutubeApp = /*#__PURE__*/function () {
 
               case 3:
                 responseData = _context2.sent;
-                this.nextPageToken = responseData.nextPageToken; // const responseData = {
+                this.nextPageToken = responseData.nextPageToken;
+                /**
+                 * 목 데이터로 검색 결과 대체
+                 */
+                // const responseData = {
                 //   items: mockObject(),
                 // };
                 // 검색 결과가 없을 경우
@@ -381,11 +407,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "ALLOCATE_FOR_RENDER_PX": () => (/* binding */ ALLOCATE_FOR_RENDER_PX),
 /* harmony export */   "DELAY_TIME": () => (/* binding */ DELAY_TIME),
-/* harmony export */   "ERROR_MESSAGE_USER_STORAGE_OVERFLOW": () => (/* binding */ ERROR_MESSAGE_USER_STORAGE_OVERFLOW),
+/* harmony export */   "ERROR_MESSAGE": () => (/* binding */ ERROR_MESSAGE),
 /* harmony export */   "ITEMS_PER_REQUEST": () => (/* binding */ ITEMS_PER_REQUEST),
 /* harmony export */   "STORAGE_MAX_COUNT": () => (/* binding */ STORAGE_MAX_COUNT)
 /* harmony export */ });
-var ERROR_MESSAGE_USER_STORAGE_OVERFLOW = "동영상 저장소가 가득 찼습니다. 동영상은 100개까지 저장이 가능하니, 시청하지 않는 동영상을 제거하신 후 이용해주시기 바랍니다.";
+var ERROR_MESSAGE = {
+  USER_STORAGE_OVERFLOW: "동영상 저장소가 가득 찼습니다. 동영상은 100개까지 저장이 가능하니, 시청하지 않는 동영상을 제거하신 후 이용해주시기 바랍니다.",
+  SEARCH_INPUT_IS_EMPTY: "원하시는 영상의 검색어를 입력하신 후 검색 버튼을 클릭해주시기 바랍니다."
+};
 var DELAY_TIME = 300;
 var ITEMS_PER_REQUEST = 10;
 var ALLOCATE_FOR_RENDER_PX = 40;
@@ -486,9 +515,11 @@ var generateTemplate = {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "addClassList": () => (/* binding */ addClassList),
+/* harmony export */   "alertMessage": () => (/* binding */ alertMessage),
 /* harmony export */   "bindEventListener": () => (/* binding */ bindEventListener),
 /* harmony export */   "currentScrollHeight": () => (/* binding */ currentScrollHeight),
 /* harmony export */   "findTargetDataset": () => (/* binding */ findTargetDataset),
+/* harmony export */   "inputClear": () => (/* binding */ inputClear),
 /* harmony export */   "insertImageSrc": () => (/* binding */ insertImageSrc),
 /* harmony export */   "removeAllChildElements": () => (/* binding */ removeAllChildElements),
 /* harmony export */   "removeChildElement": () => (/* binding */ removeChildElement),
@@ -496,9 +527,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "removeClassList": () => (/* binding */ removeClassList),
 /* harmony export */   "render": () => (/* binding */ render),
 /* harmony export */   "scrollToTop": () => (/* binding */ scrollToTop),
-/* harmony export */   "totalScrollHeight": () => (/* binding */ totalScrollHeight)
+/* harmony export */   "totalScrollHeight": () => (/* binding */ totalScrollHeight),
+/* harmony export */   "validateInput": () => (/* binding */ validateInput)
 /* harmony export */ });
 /* harmony import */ var _constants_constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants/constants */ "./src/js/constants/constants.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils */ "./src/js/utils/utils.js");
+
 
 var bindEventListener = function bindEventListener(element, type, callback) {
   element.addEventListener(type, callback);
@@ -545,6 +579,17 @@ var currentScrollHeight = function currentScrollHeight(element) {
 var insertImageSrc = function insertImageSrc(element, resource) {
   element.src = resource;
 };
+var inputClear = function inputClear(element) {
+  element.value = "";
+};
+var alertMessage = function alertMessage(message) {
+  alert(message);
+};
+var validateInput = function validateInput(inputValue) {
+  if ((0,_utils__WEBPACK_IMPORTED_MODULE_1__.isEmpty)(inputValue)) {
+    throw new Error(_constants_constants__WEBPACK_IMPORTED_MODULE_0__.ERROR_MESSAGE.SEARCH_INPUT_IS_EMPTY);
+  }
+};
 
 /***/ }),
 
@@ -558,6 +603,7 @@ var insertImageSrc = function insertImageSrc(element, resource) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "isDuplicate": () => (/* binding */ isDuplicate),
+/* harmony export */   "isEmpty": () => (/* binding */ isEmpty),
 /* harmony export */   "parsedDate": () => (/* binding */ parsedDate),
 /* harmony export */   "throttle": () => (/* binding */ throttle)
 /* harmony export */ });
@@ -582,6 +628,9 @@ var throttle = function throttle(callback, delayTime) {
       callback();
     }, delayTime);
   };
+};
+var isEmpty = function isEmpty(inputValue) {
+  return !inputValue.trim().length;
 };
 
 /***/ }),
